@@ -1,0 +1,3 @@
+data_schema_dir: ../data/schemas
+ngram_len: 50
+test_run: False
