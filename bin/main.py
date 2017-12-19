@@ -24,6 +24,7 @@ import numpy as np
 
 import lib
 import models
+from reddit_scraper import scrape_subreddit
 
 
 def main():
@@ -32,7 +33,7 @@ def main():
     :return: None
     :rtype: None
     """
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.DEBUG)
 
     text = extract()
     text, char_indices, indices_char, x, y = transform(text)
@@ -43,13 +44,14 @@ def main():
 def extract():
     # TODO Extract
 
-    path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
-    text = io.open(path, encoding='utf-8').read().lower()
+    # Extract all posts for given subreddit, going back given number of days
+    logging.info('Downloading submissions from Reddit')
+    observations = scrape_subreddit(lib.get_conf('subreddit'), lib.get_conf('history_num_days'))
+    logging.info('Found {} submissions'.format(len(observations.index)))
 
-    if lib.get_conf('test_run'):
-        text = text[:10000]
-
-    return text
+    logging.info('End extract')
+    lib.archive_dataset_schemas('extract', locals(), globals())
+    return None
 
 
 def transform(text, false_y=False):

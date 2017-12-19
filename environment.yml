@@ -24,20 +24,26 @@ dependencies:
 - pip:
   - backports.weakref==1.0.post1
   - bleach==1.5.0
+  - certifi==2017.11.5
+  - chardet==3.0.4
   - enum34==1.1.6
   - funcsigs==1.0.2
   - futures==3.2.0
   - html5lib==0.9999999
+  - idna==2.6
   - keras==2.1.2
   - markdown==2.6.10
   - mock==2.0.0
   - numpy==1.13.3
   - pandas==0.21.1
   - pbr==3.1.1
+  - praw==5.3.0
+  - prawcore==0.13.0
   - protobuf==3.5.0.post1
   - python-dateutil==2.6.1
   - pytz==2017.3
   - pyyaml==3.12
+  - requests==2.18.4
   - scikit-learn==0.19.1
   - scipy==1.0.0
   - six==1.11.0
@@ -45,5 +51,7 @@ dependencies:
   - sklearn-pandas==1.6.0
   - tensorflow==1.4.1
   - tensorflow-tensorboard==0.4.0rc3
+  - update-checker==0.16
+  - urllib3==1.22
   - werkzeug==0.13
 prefix: !!python/unicode '/Users/bjherger/anaconda2/envs/shower'
