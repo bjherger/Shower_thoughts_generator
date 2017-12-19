@@ -1,8 +1,9 @@
 data_schema_dir: ../data/schemas
-ngram_len: 50
-test_run: True
+ngram_len: 15
+test_run: False
 client_secret: 8nw2f3yj_iP735pwxpyDA0cE-HE
 client_id: Q6YCqc0ng-u6IA
 subreddit: Showerthoughts
 history_num_days: 100
 max_sequence_length: 128
+pred_length: 75

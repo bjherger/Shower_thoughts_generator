@@ -5,22 +5,13 @@ coding=utf-8
 Code Template
 
 """
-import io
 import logging
 import random
 
-import sys
-
+import cPickle
 import numpy
-import tensorflow
-from keras import Sequential
-from keras.layers import LSTM, Dense, Activation
-from keras.optimizers import RMSprop
-from keras.utils import get_file
-from sklearn.preprocessing import OneHotEncoder
-from keras import backend as K
-
 import numpy as np
+from keras.optimizers import RMSprop
 
 import lib
 import models
@@ -35,9 +26,12 @@ def main():
     """
     logging.basicConfig(level=logging.DEBUG)
 
-    text = extract()
-    text, char_indices, indices_char, x, y = transform(text)
-    model(text, char_indices, indices_char, x, y)
+    # observations = extract()
+    # cPickle.dump(observations, open('../data/pickles/posts_extract.pkl', 'w+'))
+
+    observations = cPickle.load(open('../data/pickles/posts_extract.pkl'))
+    observations, char_indices, indices_char, x, y = transform(observations)
+    model(observations, char_indices, indices_char, x, y)
 
     pass
 
@@ -51,43 +45,37 @@ def extract():
 
     logging.info('End extract')
     lib.archive_dataset_schemas('extract', locals(), globals())
-    return None
+    return observations
 
 
-def transform(text, false_y=False):
-    # TODO Should use universal character set, for inference time
-    chars = sorted(list(set(lib.legal_characters())))
-    if false_y:
-        text +=' '
+def transform(observations, false_y=False):
 
-    text = map(lambda x: x.lower(), text)
-    text = filter(lambda x: x in lib.legal_characters(), text)
-    text = ''.join(text)
+    # Reference variables
+    char_indices = lib.get_char_indices()
+    indices_char = lib.get_indices_char()
+    x_agg = list()
+    y_agg = list()
 
-    char_indices = dict((c, i) for i, c in enumerate(chars))
-    indices_char = dict((i, c) for i, c in enumerate(chars))
+    if lib.get_conf('test_run'):
+        observations = observations.head(1000)
 
-    # cut the text in semi-redundant sequences of maxlen characters
-    step = 3
-    sentences = []
-    next_chars = []
-    for observation_index in range(0, len(text) - lib.get_conf('ngram_len'), step):
-        sentences.append(text[observation_index: observation_index + lib.get_conf('ngram_len')])
-        next_chars.append(text[observation_index + lib.get_conf('ngram_len')])
+    # Create a single field with all text
+    # TODO Add start and end tokens
+    observations['model_text'] = observations['title'] + ' ' + observations['selftext']
 
-    x = np.zeros((len(sentences), lib.get_conf('ngram_len')), dtype=numpy.uint16)
+    # Iterate through individual observations
+    for text in observations['model_text']:
 
-    y = np.zeros((len(sentences), len(chars)), dtype=bool)
+        # Generate x and y for observations
+        observation_x, observation_y = lib.gen_x_y(text, false_y=false_y)
+        x_agg.extend(observation_x)
+        y_agg.extend(observation_y)
 
-    for observation_index, sentence in enumerate(sentences):
-        for t, char in enumerate(sentence):
-            x[observation_index, t] = char_indices[char]
-        y[observation_index, char_indices[next_chars[observation_index]]] = 1
+    x = numpy.matrix(x_agg)
+    y = numpy.matrix(y_agg)
+    return observations, char_indices, indices_char, x, y
 
-
-    return text, char_indices, indices_char, x, y
-
-def model(text, char_indices, indices_char, x, y):
+def model(observation, char_indices, indices_char, x, y):
 
     model = models.rnn_embedding_model(x, y)
 
@@ -102,18 +90,21 @@ def model(text, char_indices, indices_char, x, y):
                   batch_size=4096,
                   epochs=1)
 
-        start_index = random.randint(0, len(text) - lib.get_conf('ngram_len') - 1)
-
         for diversity in [0.2, 0.5, 1.0, 1.2]:
 
             generated = ''
-            sentence = text[start_index: start_index + lib.get_conf('ngram_len')]
+            seed_index = numpy.random.choice(range(len(x)))
+            print seed_index
+            print x[seed_index]
+            seed = ''.join(map(lambda x: indices_char[x], x[seed_index]))
+
+            sentence = seed
             generated += sentence
             print('----- Generating with seed: "' + sentence + '"')
             print(generated)
 
             # Generate 400 characters, using a rolling window
-            for next_char_index in range(400):
+            for next_char_index in range(lib.get_conf('pred_length')):
                 text_text, text_char_indices, text_indices_char, x_pred, text_y = transform(sentence, false_y=True)
 
                 preds = model.predict(x_pred, verbose=0)[-1]
@@ -124,7 +115,7 @@ def model(text, char_indices, indices_char, x, y):
                 generated += next_char
                 sentence = sentence[1:] + next_char
 
-            print 'Seed: {}, diversity: {}'.format(text[start_index: start_index + lib.get_conf('ngram_len')], diversity)
+            print 'Seed: {}, diversity: {}'.format(seed, diversity)
             print generated
 
 def sample(preds, temperature=1.0):
