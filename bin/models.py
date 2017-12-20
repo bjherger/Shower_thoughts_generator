@@ -48,6 +48,7 @@ def ff_model(X, y):
 
 
 def rnn_embedding_model(X, y):
+    print X.shape
 
     if len(X.shape) >= 2:
         embedding_input_length = int(X.shape[1])
@@ -75,7 +76,7 @@ def rnn_embedding_model(X, y):
                                 name='char_embedding')
 
     # Create output layer
-    softmax_output_dim = len(y[0])
+    softmax_output_dim = y.shape[1]
     output_layer = Dense(units=softmax_output_dim, activation='softmax')
 
     # Create model architecture

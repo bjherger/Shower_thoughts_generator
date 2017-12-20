@@ -5,7 +5,10 @@ import tempfile
 
 import numpy
 import pandas
+import re
 import yaml
+
+import numpy as np
 
 # Global variables
 from sklearn.preprocessing import LabelEncoder
@@ -15,7 +18,8 @@ import main
 CONFS = None
 BATCH_NAME = None
 TEMP_DIR = None
-
+INDICES_CHAR = None
+CHAR_INDICES = None
 
 def load_confs(confs_path='../conf/conf.yaml'):
     """
@@ -136,10 +140,7 @@ def archive_dataset_schemas(step_name, local_dict, global_dict):
     agg_schema_df.to_csv(schema_output_path, index_label='variable')
 
 def legal_characters():
-    return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!-""")
-
-def find_ngrams(input_list, n):
-    return zip(*[input_list[i:] for i in range(n)])
+    return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!&-""")
 
 def model_predict(encoder, ohe, model, text):
 
@@ -169,6 +170,22 @@ def model_predict(encoder, ohe, model, text):
     # Return multinomial random character
     return next_char
 
+
+def get_char_indices():
+    global CHAR_INDICES
+    if CHAR_INDICES is None:
+        chars = sorted(list(set(legal_characters())))
+        CHAR_INDICES = dict((c, i) for i, c in enumerate(chars))
+    return CHAR_INDICES
+
+def get_indices_char():
+    global INDICES_CHAR
+    if INDICES_CHAR is None:
+        chars = sorted(list(set(legal_characters())))
+        INDICES_CHAR = dict((i, c) for i, c in enumerate(chars))
+    return INDICES_CHAR
+
+
 def finish_sentence(encoder, ohe, model, text, num_chars=100):
     result_string = text
 
@@ -179,4 +196,36 @@ def finish_sentence(encoder, ohe, model, text, num_chars=100):
     result_string=result_string[len(text):]
     return result_string
 
+def gen_x_y(text, false_y):
+    chars = sorted(list(set(legal_characters())))
+    char_indices = get_char_indices()
+    indices_char = get_indices_char()
+    sentences = list()
+    next_chars = list()
+    step = 3
 
+    if false_y:
+        text +=' '
+
+    text = map(lambda x: x.lower(), text)
+    text = map(lambda x: x if x in legal_characters() else ' ', text)
+    text = ''.join(text)
+    if not false_y:
+        text = re.sub(r'\s+', ' ', text)
+
+
+    # Cut the text in semi-redundant sequences of maxlen characters
+    for observation_index in range(0, len(text) - get_conf('ngram_len'), step):
+        sentences.append(text[observation_index: observation_index + get_conf('ngram_len')])
+        next_chars.append(text[observation_index + get_conf('ngram_len')])
+
+    # Convert all sequences into X and Y matrices
+    x = np.zeros((len(sentences), get_conf('ngram_len')))
+    y = np.zeros((len(sentences), len(chars)), dtype=bool)
+
+    for observation_index, sentence in enumerate(sentences):
+        for t, char in enumerate(sentence):
+            x[observation_index, t] = char_indices[char]
+        y[observation_index, char_indices[next_chars[observation_index]]] = 1
+
+    return x, y
