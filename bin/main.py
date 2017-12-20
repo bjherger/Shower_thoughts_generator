@@ -57,7 +57,7 @@ def transform(observations, false_y=False):
     y_agg = list()
 
     if lib.get_conf('test_run'):
-        observations = observations.head(1000)
+        observations = observations.head(100).copy()
 
     # Create a single field with all text
     # TODO Add start and end tokens
@@ -86,6 +86,8 @@ def model(observation, char_indices, indices_char, x, y):
     for iteration in range(1, 60):
         logging.info('Iteration number: {}'.format(iteration))
         print 'Iteration number: {}'.format(iteration)
+
+
         model.fit(x, y,
                   batch_size=4096,
                   epochs=1)
@@ -93,19 +95,20 @@ def model(observation, char_indices, indices_char, x, y):
         for diversity in [0.2, 0.5, 1.0, 1.2]:
 
             generated = ''
-            seed_index = numpy.random.choice(range(len(x)))
-            print seed_index
-            print x[seed_index]
-            seed = ''.join(map(lambda x: indices_char[x], x[seed_index]))
+            seed_index = numpy.random.choice(len(x))
+            seed_indices = x[seed_index].tolist()[0]
+            print len(seed_indices), 'seed_indices'
+            seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
 
-            sentence = seed
+            sentence = seed_chars
             generated += sentence
             print('----- Generating with seed: "' + sentence + '"')
             print(generated)
 
-            # Generate 400 characters, using a rolling window
+            # Generate next characters, using a rolling window
             for next_char_index in range(lib.get_conf('pred_length')):
-                text_text, text_char_indices, text_indices_char, x_pred, text_y = transform(sentence, false_y=True)
+                
+                x_pred, text_y = lib.gen_x_y(sentence, false_y=True)
 
                 preds = model.predict(x_pred, verbose=0)[-1]
 
@@ -115,7 +118,7 @@ def model(observation, char_indices, indices_char, x, y):
                 generated += next_char
                 sentence = sentence[1:] + next_char
 
-            print 'Seed: {}, diversity: {}'.format(seed, diversity)
+            print 'Seed: {}, diversity: {}'.format(seed_chars, diversity)
             print generated
 
 def sample(preds, temperature=1.0):

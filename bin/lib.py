@@ -5,6 +5,7 @@ import tempfile
 
 import numpy
 import pandas
+import re
 import yaml
 
 import numpy as np
@@ -17,7 +18,8 @@ import main
 CONFS = None
 BATCH_NAME = None
 TEMP_DIR = None
-
+INDICES_CHAR = None
+CHAR_INDICES = None
 
 def load_confs(confs_path='../conf/conf.yaml'):
     """
@@ -140,9 +142,6 @@ def archive_dataset_schemas(step_name, local_dict, global_dict):
 def legal_characters():
     return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!&-""")
 
-def find_ngrams(input_list, n):
-    return zip(*[input_list[i:] for i in range(n)])
-
 def model_predict(encoder, ohe, model, text):
 
     # Transform characters
@@ -173,12 +172,18 @@ def model_predict(encoder, ohe, model, text):
 
 
 def get_char_indices():
-    chars = sorted(list(set(legal_characters())))
-    return dict((c, i) for i, c in enumerate(chars))
+    global CHAR_INDICES
+    if CHAR_INDICES is None:
+        chars = sorted(list(set(legal_characters())))
+        CHAR_INDICES = dict((c, i) for i, c in enumerate(chars))
+    return CHAR_INDICES
 
 def get_indices_char():
-    chars = sorted(list(set(legal_characters())))
-    return dict((i, c) for i, c in enumerate(chars))
+    global INDICES_CHAR
+    if INDICES_CHAR is None:
+        chars = sorted(list(set(legal_characters())))
+        INDICES_CHAR = dict((i, c) for i, c in enumerate(chars))
+    return INDICES_CHAR
 
 
 def finish_sentence(encoder, ohe, model, text, num_chars=100):
@@ -199,14 +204,15 @@ def gen_x_y(text, false_y):
     next_chars = list()
     step = 3
 
-
     if false_y:
         text +=' '
 
     text = map(lambda x: x.lower(), text)
     text = map(lambda x: x if x in legal_characters() else ' ', text)
     text = ''.join(text)
-    text = ' '.join(text.split())
+    if not false_y:
+        text = re.sub(r'\s+', ' ', text)
+
 
     # Cut the text in semi-redundant sequences of maxlen characters
     for observation_index in range(0, len(text) - get_conf('ngram_len'), step):
