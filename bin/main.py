@@ -91,14 +91,13 @@ def model(observation, char_indices, indices_char, x, y):
         model.fit(x, y,
                   batch_size=4096,
                   epochs=1)
+        seed_index = numpy.random.choice(len(x))
+        seed_indices = x[seed_index].tolist()[0]
+        seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
 
         for diversity in [0.2, 0.5, 1.0, 1.2]:
 
             generated = ''
-            seed_index = numpy.random.choice(len(x))
-            seed_indices = x[seed_index].tolist()[0]
-            seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
-
             sentence = seed_chars
             generated += sentence
             print('----- Generating with seed: "' + sentence + '"')
