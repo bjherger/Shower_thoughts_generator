@@ -11,6 +11,7 @@ import random
 import cPickle
 import numpy
 import numpy as np
+import re
 from keras.optimizers import RMSprop
 
 import lib
@@ -59,9 +60,11 @@ def transform(observations, false_y=False):
     if lib.get_conf('test_run'):
         observations = observations.head(100).copy()
 
-    # Create a single field with all text
-    # TODO Add start and end tokens
+    # Create a single field with all text. < and > serve as start and end tokens
     observations['model_text'] = observations['title'] + ' ' + observations['selftext']
+    observations['model_text'] = observations['model_text'].apply(lambda x: re.sub('<', ' ', x))
+    observations['model_text'] = observations['model_text'].apply(lambda x: re.sub('>', ' ', x))
+    observations['model_text'] = '<' + observations['model_text'] + '>'
 
     # Iterate through individual observations
     for text in observations['model_text']:
