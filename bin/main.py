@@ -97,7 +97,6 @@ def model(observation, char_indices, indices_char, x, y):
             generated = ''
             seed_index = numpy.random.choice(len(x))
             seed_indices = x[seed_index].tolist()[0]
-            print len(seed_indices), 'seed_indices'
             seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
 
             sentence = seed_chars

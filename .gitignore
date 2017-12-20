@@ -8,3 +8,6 @@
 
 # User-specific Idea / Pycharm files
 .idea/
+
+# Sensitive files
+conf/conf.yaml
