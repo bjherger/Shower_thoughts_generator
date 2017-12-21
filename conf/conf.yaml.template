@@ -1,8 +1,9 @@
 data_schema_dir: ../data/schemas
-ngram_len: 15
-test_run: False
+ngram_len: 40
+test_run: True
 client_secret: Y0urSecret
 client_id: Y0urID
 subreddit: Showerthoughts
 history_num_days: 100
+model_checkpoint_path: ../data/output/checkpoints
 pred_length: 75

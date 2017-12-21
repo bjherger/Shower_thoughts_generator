@@ -13,7 +13,7 @@ import numpy
 import numpy as np
 import re
 
-from keras.callbacks import TensorBoard
+from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.optimizers import RMSprop
 
 import lib
@@ -84,11 +84,16 @@ def model(observation, char_indices, indices_char, x, y):
 
     model = models.rnn_embedding_model(x, y)
 
+    # Set up model training variables
     optimizer = RMSprop(lr=0.01)
     model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-    tf_log_path = os.path.join(os.path.expanduser('~/.logs'), str(lib.get_batch_name()))
+
+    # Set up callbacks
+    tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
-    callbacks = [TensorBoard(log_dir=tf_log_path)]
+    mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:02d}.h5py')
+    callbacks = [TensorBoard(log_dir=tf_log_path),
+                 ModelCheckpoint(mc_log_path)]
 
     # Train the model, output generated text after each iteration
     for iteration in range(1, 60):
