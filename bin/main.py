@@ -18,6 +18,7 @@ from keras.optimizers import RMSprop
 
 import lib
 import models
+from sentence_callback import SentenceGenerator
 from reddit_scraper import scrape_subreddit
 
 
@@ -92,54 +93,19 @@ def model(observation, char_indices, indices_char, x, y):
     tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
     mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
+    logging.info('Using mc_log_path path: {}'.format(mc_log_path))
+    sentence_generator = SentenceGenerator()
+
     callbacks = [TensorBoard(log_dir=tf_log_path),
-                 ModelCheckpoint(mc_log_path)]
+                 ModelCheckpoint(mc_log_path),
+                 sentence_generator]
 
     # Train the model, output generated text after each iteration
-    for iteration in range(1, 60):
-        logging.info('Iteration number: {}'.format(iteration))
-        print 'Iteration number: {}'.format(iteration)
+    model.fit(x, y,
+              batch_size=4096,
+              epochs=2, callbacks=callbacks)
 
-
-        model.fit(x, y,
-                  batch_size=4096,
-                  epochs=1, callbacks=callbacks)
-        seed_index = numpy.random.choice(len(x))
-        seed_indices = x[seed_index].tolist()[0]
-        seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
-
-        for diversity in [0.2, 0.5, 1.0, 1.2]:
-
-            generated = ''
-            sentence = seed_chars
-            generated += sentence
-            print('----- Generating with seed: "' + sentence + '"')
-            print(generated)
-
-            # Generate next characters, using a rolling window
-            for next_char_index in range(lib.get_conf('pred_length')):
-                
-                x_pred, text_y = lib.gen_x_y(sentence, false_y=True)
-
-                preds = model.predict(x_pred, verbose=0)[-1]
-
-                next_index = sample(preds, diversity)
-                next_char = indices_char[next_index]
-
-                generated += next_char
-                sentence = sentence[1:] + next_char
-
-            print 'Seed: {}, diversity: {}'.format(seed_chars, diversity)
-            print generated
-
-def sample(preds, temperature=1.0):
-    # helper function to sample an index from a probability array
-    preds = np.asarray(preds).astype('float64')
-    preds = np.log(preds) / temperature
-    exp_preds = np.exp(preds)
-    preds = exp_preds / np.sum(exp_preds)
-    probas = np.random.multinomial(1, preds, 1)
-    return np.argmax(probas)
+    print sentence_generator.sentences
 
 # Main section
 if __name__ == '__main__':

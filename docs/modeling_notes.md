@@ -21,4 +21,10 @@ Model check-pointing
  - Setting up filename, adding to confs
  - Test run
  
- 
+Sentence generation
+
+ - Changing sentence generation to callback, so that I can use regular epoch generation
+ - Reading [keras docs](https://keras.io/callbacks/#create-a-callback)
+ - I'll create a custom class, so that I can store output
+ - First pass at creating callback
+ - Refactoring calls to other files 
