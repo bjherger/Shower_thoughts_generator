@@ -140,7 +140,7 @@ def archive_dataset_schemas(step_name, local_dict, global_dict):
     agg_schema_df.to_csv(schema_output_path, index_label='variable')
 
 def legal_characters():
-    return et("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!-""")
+    return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!-""")
 
 def model_predict(encoder, ohe, model, text):
 
