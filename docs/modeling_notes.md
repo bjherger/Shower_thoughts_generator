@@ -17,4 +17,8 @@ Model check-pointing
 
  - Reading [keras docs](https://keras.io/callbacks/#modelcheckpoint)
  - Adding model checkpoint callback
- - Installing `h5py`, required to save models 
+ - Installing `h5py`, required to save models
+ - Setting up filename, adding to confs
+ - Test run
+ 
+ 

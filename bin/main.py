@@ -91,7 +91,7 @@ def model(observation, char_indices, indices_char, x, y):
     # Set up callbacks
     tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
-    mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:02d}.h5py')
+    mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
     callbacks = [TensorBoard(log_dir=tf_log_path),
                  ModelCheckpoint(mc_log_path)]
 
@@ -103,7 +103,7 @@ def model(observation, char_indices, indices_char, x, y):
 
         model.fit(x, y,
                   batch_size=4096,
-                  epochs=10, callbacks=callbacks)
+                  epochs=1, callbacks=callbacks)
         seed_index = numpy.random.choice(len(x))
         seed_indices = x[seed_index].tolist()[0]
         seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
