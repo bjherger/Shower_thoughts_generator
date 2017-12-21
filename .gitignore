@@ -11,3 +11,6 @@
 
 # Sensitive files
 conf/conf.yaml
+
+# Model checkpoint
+data/output/checkpoints

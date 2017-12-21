@@ -140,7 +140,7 @@ def archive_dataset_schemas(step_name, local_dict, global_dict):
     agg_schema_df.to_csv(schema_output_path, index_label='variable')
 
 def legal_characters():
-    return set("""0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ """)
+    return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!-""")
 
 def model_predict(encoder, ohe, model, text):
 
@@ -229,3 +229,12 @@ def gen_x_y(text, false_y):
         y[observation_index, char_indices[next_chars[observation_index]]] = 1
 
     return x, y
+
+def sample(preds, temperature=1.0):
+    # helper function to sample an index from a probability array
+    preds = np.asarray(preds).astype('float64')
+    preds = np.log(preds) / temperature
+    exp_preds = np.exp(preds)
+    preds = exp_preds / np.sum(exp_preds)
+    probas = np.random.multinomial(1, preds, 1)
+    return np.argmax(probas)
