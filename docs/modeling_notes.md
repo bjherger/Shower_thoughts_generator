@@ -2,4 +2,8 @@
 
 ## 2017-12-21
 
-### Call backs
+### Callbacks
+
+TensorBoard callback
+
+ - Looking up for [keras docs](https://keras.io/callbacks/#tensorboard)

@@ -12,6 +12,8 @@ import cPickle
 import numpy
 import numpy as np
 import re
+
+from keras.callbacks import TensorBoard
 from keras.optimizers import RMSprop
 
 import lib
@@ -84,6 +86,7 @@ def model(observation, char_indices, indices_char, x, y):
 
     optimizer = RMSprop(lr=0.01)
     model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+    callbacks = [TensorBoard()]
 
     # Train the model, output generated text after each iteration
     for iteration in range(1, 60):
@@ -93,7 +96,7 @@ def model(observation, char_indices, indices_char, x, y):
 
         model.fit(x, y,
                   batch_size=4096,
-                  epochs=1)
+                  epochs=1, callbacks=callbacks)
         seed_index = numpy.random.choice(len(x))
         seed_indices = x[seed_index].tolist()[0]
         seed_chars = ''.join(map(lambda x: lib.get_indices_char()[x], seed_indices))
