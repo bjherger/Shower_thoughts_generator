@@ -4,9 +4,14 @@ import pandas
 import lib
 
 class SentenceGenerator(keras.callbacks.Callback):
-    def on_train_begin(self, logs={}):
+
+    def __init__(self, output_path=None, verbose=0):
+        super(SentenceGenerator, self).__init__()
+        self.output_path = output_path
+        self.verbose = verbose
         self.epoch = 0
         self.sentences = pandas.DataFrame(columns=['epoch', 'seed', 'diversity', 'generated_post'])
+
 
     def on_batch_end(self, batch, logs={}):
 
@@ -41,8 +46,13 @@ class SentenceGenerator(keras.callbacks.Callback):
             local_dict['generated_post'] = generated
             sentence_agg.append(local_dict)
 
-            print('diversity: {}, generated post: {}'.format(local_dict['diversity'], local_dict['generated_post']))
+            if self.verbose >= 1:
+                print('Diversity: {}, generated post: {}'.format(local_dict['diversity'], local_dict['generated_post']))
+
         epoch_sentences = pandas.DataFrame(sentence_agg)
         
         self.sentences = pandas.concat(objs=[self.sentences, epoch_sentences])
+        if self.output_path is not None:
+            self.sentences.to_csv(path_or_buf=self.output_path, index=False)
+
         self.epoch += 1
