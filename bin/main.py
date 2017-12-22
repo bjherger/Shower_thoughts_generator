@@ -65,12 +65,9 @@ def transform(observations, false_y=False):
 
     # Create a single field with all text. < and > serve as start and end tokens
     observations['model_text'] = observations['title'] + ' ' + observations['selftext']
-    observations['model_text'] = observations['model_text'].apply(lambda x: re.sub('<', ' ', x))
-    observations['model_text'] = observations['model_text'].apply(lambda x: re.sub('>', ' ', x))
-    observations['model_text'] = '<' + observations['model_text'] + '>'
 
     # Iterate through individual observations
-    for text in observations['model_text']:
+    for text in observations['user_seed']:
 
         # Generate x and y for observations
         observation_x, observation_y = lib.gen_x_y(text, false_y=false_y)

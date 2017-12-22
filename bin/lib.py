@@ -204,13 +204,26 @@ def gen_x_y(text, false_y):
     next_chars = list()
     step = 3
 
-    if false_y:
-        text +=' '
+
 
     text = map(lambda x: x.lower(), text)
     text = map(lambda x: x if x in legal_characters() else ' ', text)
     text = ''.join(text)
-    if not false_y:
+
+
+    # Add start and end characters
+    text = re.sub('<', ' ', text)
+    text = re.sub('>', ' ', text)
+    # text = '<' + text + '>'
+
+    if false_y:
+
+        # Add a padding character, so which will become the Y
+        text +=' '
+
+    else:
+
+        # Replace multiple whitespaces with a single whitespace
         text = re.sub(r'\s+', ' ', text)
 
 

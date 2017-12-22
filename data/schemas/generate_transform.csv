@@ -1,0 +1,9 @@
+variable,data_set,type,variable
+user_seed,observations,object,
+Unnamed: 1,observations,float64,
+model_seed,observations,object,
+user_seed_truncated,observations,bool,
+diversity,generated_sentences,float64,
+generated_post,generated_sentences,object,
+observation_index,generated_sentences,int64,
+seed,generated_sentences,object,
