@@ -67,7 +67,7 @@ def transform(observations, false_y=False):
     observations['model_text'] = observations['title'] + ' ' + observations['selftext']
 
     # Iterate through individual observations
-    for text in observations['user_seed']:
+    for text in observations['model_text']:
 
         # Generate x and y for observations
         observation_x, observation_y = lib.gen_x_y(text, false_y=false_y)
