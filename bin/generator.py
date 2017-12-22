@@ -9,11 +9,14 @@ import logging
 import os
 
 import cPickle
+
+import keras
 import numpy
 import numpy as np
 import re
 
 from keras.callbacks import TensorBoard, ModelCheckpoint
+from keras.models import load_model
 from keras.optimizers import RMSprop
 
 import lib
@@ -37,10 +40,9 @@ def main():
     pass
 
 def extract():
-    # TODO Extract
 
     # TODO Extract appropriate model
-    char_model = None
+    char_model = load_model(filepath=lib.get_conf('generate_model_path'))
 
     # TODO Extract posts to be completed
     observations = None
