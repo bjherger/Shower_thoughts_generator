@@ -5,7 +5,6 @@ Intro
  - Example (gif?)
  - Purpose
  
- 
 Data
 
  - Intro to Reddit / shower thoughts
