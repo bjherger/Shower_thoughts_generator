@@ -27,4 +27,16 @@ Sentence generation
  - Reading [keras docs](https://keras.io/callbacks/#create-a-callback)
  - I'll create a custom class, so that I can store output
  - First pass at creating callback
- - Refactoring calls to other files 
+ - Refactoring calls to other files
+ 
+## 2017-12-22
+
+Ran some hefty models yesterday. Adding h5py file to repo
+
+Infer
+
+ - Setting up inference pipeline, to complete stubs
+ - Creating interface
+ - Writing model and data load
+ - Starting on transform
+ - Updating x y generator to include start and end of phrase brackets 
