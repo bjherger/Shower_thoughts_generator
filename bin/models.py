@@ -81,7 +81,7 @@ def rnn_embedding_model(X, y):
 
     # Create model architecture
     x = embedding_layer(sequence_input)
-    x = LSTM(128, dropout=.2, recurrent_dropout=.2)(x)
+    x = LSTM(256, dropout=.2, recurrent_dropout=.2)(x)
     x = output_layer(x)
 
     optimizer = RMSprop(lr=.001)

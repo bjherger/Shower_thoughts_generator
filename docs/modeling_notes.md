@@ -33,10 +33,26 @@ Sentence generation
 
 Ran some hefty models yesterday. Adding h5py file to repo
 
-Infer
+### Infer
 
  - Setting up inference pipeline, to complete stubs
  - Creating interface
  - Writing model and data load
  - Starting on transform
- - Updating x y generator to include start and end of phrase brackets 
+ - Updating x y generator to include start and end of phrase brackets
+ - Generating observations
+ - Writing everything to file
+ 
+### Model2.0
+
+Backlog 
+
+ - Include all printable characters
+ - Include `>>>>` at end of post
+ - More LSTM nodes
+ - LR restarts?
+ 
+Extract changes
+ - Including all printable chars
+ - Added padding w/ end character
+ - Doubled number of LSTM nodes

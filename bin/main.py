@@ -100,7 +100,7 @@ def model(observation, char_indices, indices_char, x, y):
     # Train the model, output generated text after each iteration
     model.fit(x, y,
               batch_size=4096,
-              epochs=2, callbacks=callbacks)
+              epochs=200, callbacks=callbacks)
 
     print sentence_generator.sentences
 
