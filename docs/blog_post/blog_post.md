@@ -1,7 +1,10 @@
 # Deep (Shower) Thought
-## Teaching AI to generate posts to Reddit's r/Showerthoughts
+**Teaching AI to have shower thoughts, with on Reddit's r/Showerthoughts**
 
-**tl;dr:** TODO
+**tl;dr:** I tried to train a Deep Learning character model to have shower thoughts, using Reddit data. Instead it 
+learned curse words and clickbait-ing.   
+
+## Background
 
 Deep learning has drastically changed the way machines interact with human languages. From 
 [machine translation](https://research.google.com/pubs/pub45610.html) to 
@@ -9,7 +12,7 @@ Deep learning has drastically changed the way machines interact with human langu
 ML focused on human language models — has gone from sci-fi to [example code](https://github.com/keras-team/keras/tree/master/examples#text--sequences-examples). 
 
 Though I've had some previous experience with linear NLP models and word level deep learning models, I wanted to learn 
-more about building character level models. Generally, character level models look at a window of preceding 
+more about building character level deep learning models. Generally, character level models look at a window of preceding 
 characters, and try to infer the next character. Similar to repeatedly pressing auto-correct's top choice, this process 
 can be repeated to generate a string of AI generated characters. 
 
@@ -60,7 +63,7 @@ For example `If my boss made me do as much homework as my kids' teachers make th
 ## Model
 
 Data in hand, I built a model. Similar to the keras example code, I went with a Recurrent Neural Network (RNN), with 
-Long Short Term Memory (LSTM) blocks. Why this particular architecture choice works is beyond the scope of this post, but 
+Long Short Term Memory (LSTM) blocks. Why this particular architecture choice works well is beyond the scope of this post, but 
 [Chung et al.](https://arxiv.org/abs/1412.3555) covers it pretty well. 
 
 In addition to the LSTM architecture, I chose to add a character embedding layer. Heuristically, there didn't seem to 
@@ -72,8 +75,8 @@ look at embedding clustering and distances for characters, similar to
 Ultimately, the model looked something like: 
 
 ```python
-x = keras.Input(..., name='char_input')
-x = Embedding(..., name='char_embedding')(x)
+sequence_input = keras.Input(..., name='char_input')
+x = Embedding(..., name='char_embedding')(sequence_input)
 x = LSTM(128, dropout=.2, recurrent_dropout=.2)(x)
 x = Dense(..., activation='softmax', name='char_prediction_softmax')(x)
 
@@ -96,4 +99,4 @@ data set produces more intelligible results, this data set provided a more inter
 
 Check out the [repo](https://github.com/bjherger/Shower_thoughts_generator/) if you're interested in the code to create 
 the data set and train the LSTM model. And the next time your in the shower, think about this: 
-[We are giving AI a bunch of bad ideas with AI movies](https://www.reddit.com/r/Showerthoughts/comments/7dqoqu/we_are_giving_ai_a_bunch_of_bad_ideas_with_ai/?utm_term=df9c5226-c3e9-4742-beca-c1b8093b2948&utm_medium=search&utm_source=reddit&utm_name=Showerthoughts&utm_content=3)
+[We are giving AI a bunch of bad ideas with AI movies](https://www.reddit.com/r/Showerthoughts/comments/7dqoqu/we_are_giving_ai_a_bunch_of_bad_ideas_with_ai/?utm_term=df9c5226-c3e9-4742-beca-c1b8093b2948&utm_medium=search&utm_source=reddit&utm_name=Showerthoughts&utm_content=3).
