@@ -23,8 +23,8 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
 
     char_model, observations = extract()
-    char_model, observations = transform(char_model, observations)
-    load(char_model, observations)
+    char_model, observations, generated_posts = transform(char_model, observations)
+    load(char_model, observations, generated_posts)
 
     pass
 
@@ -44,20 +44,13 @@ def extract():
 def transform(char_model, observations):
     logging.info('Begin transform')
 
-    # Filter out user seeds that are too short
-    # pre_filter_len = len(observations.index)
-    # observations = observations[observations['user_seed'].apply(lambda x: len(x) <= lib.get_conf('ngram_len'))].copy()
-    # post_filter_len = len(observations.index)
-    # logging.info('Filtered out user seeds that were too short. Before length: {}, after length: {}'.format(
-    #     pre_filter_len, post_filter_len))
-    # if pre_filter_len != post_filter_len:
-    #     logging.warn('{} user seeds were removed because they were too short.'.format(pre_filter_len - post_filter_len))
-    #     print '{} user seeds were removed because they were too short.'.format(pre_filter_len - post_filter_len)
-
     # Reference variables
     x_strings = list()
     x_agg = list()
     y_agg = list()
+
+    # Add additional columns
+    observations['observation_index'] = observations.index
 
     # Normalize post seed text, create windows, and add first window to agg
     for text in observations['user_seed']:
@@ -113,17 +106,21 @@ def transform(char_model, observations):
             local_dict['generated_post'] = generated
             sentence_agg.append(local_dict)
 
-    generated_sentences = pandas.DataFrame(sentence_agg)
-    print generated_sentences
+    generated_posts = pandas.DataFrame(sentence_agg)
 
     logging.info('End transform')
     lib.archive_dataset_schemas('generate_transform', locals(), globals())
-    return char_model, observations
+    return char_model, observations, generated_posts
 
 
-def load(char_model, observations):
+def load(char_model, observations, generated_posts):
     logging.info('Begin transform')
-    # TODO Export observations
+
+    # Export observations
+    observations.to_csv(path_or_buf=lib.get_conf('generated_observations_path'), index=False)
+
+    # Export generated posts
+    generated_posts.to_csv(path_or_buf=lib.get_conf('generated_posts_path'), index=False)
 
     logging.info('End load')
     lib.archive_dataset_schemas('generate_load', locals(), globals())

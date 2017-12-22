@@ -1,5 +1,10 @@
 variable,data_set,type,variable
+diversity,generated_posts,float64,
+generated_post,generated_posts,object,
+observation_index,generated_posts,int64,
+seed,generated_posts,object,
 user_seed,observations,object,
 Unnamed: 1,observations,float64,
+observation_index,observations,int64,
 model_seed,observations,object,
 user_seed_truncated,observations,bool,
