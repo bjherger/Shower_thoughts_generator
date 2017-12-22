@@ -6,23 +6,11 @@ Code Template
 
 """
 import logging
-import os
 
-import cPickle
-
-import keras
-import numpy
-import numpy as np
-import re
-
-from keras.callbacks import TensorBoard, ModelCheckpoint
+import pandas
 from keras.models import load_model
-from keras.optimizers import RMSprop
 
 import lib
-import models
-from sentence_callback import SentenceGenerator
-from reddit_scraper import scrape_subreddit
 
 
 def main():
@@ -41,18 +29,19 @@ def main():
 
 def extract():
 
-    # TODO Extract appropriate model
+    # Extract appropriate model
     char_model = load_model(filepath=lib.get_conf('generate_model_path'))
 
-    # TODO Extract posts to be completed
-    observations = None
+    # Extract posts to be completed
+    observations = pandas.read_csv(lib.get_conf('post_seed_path'))
 
     logging.info('End extract')
-    lib.archive_dataset_schemas('extract', locals(), globals())
+    lib.archive_dataset_schemas('generate_extract', locals(), globals())
     return char_model, observations
 
 
 def transform(char_model, observations):
+    logging.info('Begin transform')
 
     # TODO Normalize post seed text
 
@@ -62,12 +51,17 @@ def transform(char_model, observations):
 
     # TODO Infer sentence, add to to observations
 
+    logging.info('End transform')
+    lib.archive_dataset_schemas('generate_transform', locals(), globals())
     return char_model, observations
 
 
 def load(char_model, observations):
+    logging.info('Begin transform')
     # TODO Export observations
 
+    logging.info('End load')
+    lib.archive_dataset_schemas('generate_load', locals(), globals())
     pass
 
 # Main section
