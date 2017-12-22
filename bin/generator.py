@@ -65,7 +65,7 @@ def transform(char_model, observations):
 
         x_agg.extend(observation_x[:1])
         y_agg.extend(observation_y[:1])
-        model_text = ''.join(map(lambda x: lib.get_indices_char()[x], observation_x[0]))
+        model_text = ''.join(map(lambda x: lib.get_indices_char()[x], observation_x[:1][0]))
         x_strings.append(model_text)
 
 
@@ -81,7 +81,7 @@ def transform(char_model, observations):
     for index, observation in observations.iterrows():
         model_seed = observation['model_seed']
 
-        for diversity in numpy.arange(.1, 1.3, .1):
+        for diversity in numpy.arange(.1, 1.3, .05):
 
             generated = ''
             sentence = model_seed
