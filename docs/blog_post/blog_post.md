@@ -18,7 +18,7 @@ can be repeated to generate a string of AI generated characters.
 
 TODO Image of generated sequence
 
-Utilizing training data from [r/Showerthoughts](https://www.reddit.com/r/Showerthoughts/), and [starter code](github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py)
+Utilizing training data from [r/Showerthoughts](https://www.reddit.com/r/Showerthoughts/), and [starter code](https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py)
 from Keras, I built and trained a deep learning model that learned to generate new (and sometimes profound) shower 
 thoughts. 
  
