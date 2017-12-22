@@ -18,6 +18,7 @@ from keras.optimizers import RMSprop
 
 import lib
 import models
+from bin.clr_callback import CyclicLR
 from sentence_callback import SentenceGenerator
 from reddit_scraper import scrape_subreddit
 
@@ -80,27 +81,39 @@ def transform(observations, false_y=False):
 
 def model(observation, char_indices, indices_char, x, y):
 
-    model = models.rnn_embedding_model(x, y)
+    char_model = models.rnn_embedding_model(x, y)
 
     # Set up model training variables
     optimizer = RMSprop(lr=0.01)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+    char_model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+    batch_size = 4096
+    num_epochs = 200
+
+    if lib.get_conf('test_run'):
+        num_epochs = 2
 
     # Set up callbacks
     tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
+
     mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
     logging.info('Using mc_log_path path: {}'.format(mc_log_path))
+
     sentence_generator = SentenceGenerator(verbose=1)
+
+    clr_step_size = numpy.floor((float(x.shape[0]) / batch_size) * 4)
+    clr = CyclicLR(base_lr=.005, max_lr=.02, mode='triangular2', step_size=clr_step_size)
+    logging.info('Using CRL step size: {}'.format(clr_step_size))
 
     callbacks = [TensorBoard(log_dir=tf_log_path),
                  ModelCheckpoint(mc_log_path),
-                 sentence_generator]
+                 sentence_generator,
+                 clr]
 
     # Train the model, output generated text after each iteration
-    model.fit(x, y,
-              batch_size=4096,
-              epochs=200, callbacks=callbacks)
+    char_model.fit(x, y,
+              batch_size=batch_size,
+              epochs=num_epochs, callbacks=callbacks)
 
     print sentence_generator.sentences
 

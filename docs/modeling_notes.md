@@ -56,3 +56,13 @@ Extract changes
  - Including all printable chars
  - Added padding w/ end character
  - Doubled number of LSTM nodes
+ 
+LR restarts
+
+ - Looks like Brad's already worked on this. [repo](https://github.com/bckenstler/CLR)
+ - Trying Brad's CLR
+ - There seems to be an issue w/ the embedding. Removing CLR to see if that's causing it. 
+ - Code still does not run
+ - Issue seems to be related to updated list of legal characters. 
+ - Modifying model to instead use length of legal characters directly, rather than max value seen in X
+ - Re-introducing CLR
