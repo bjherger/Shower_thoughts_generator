@@ -66,3 +66,7 @@ LR restarts
  - Issue seems to be related to updated list of legal characters. 
  - Modifying model to instead use length of legal characters directly, rather than max value seen in X
  - Re-introducing CLR
+ 
+Data
+
+ - Downloading a 400 day data sample

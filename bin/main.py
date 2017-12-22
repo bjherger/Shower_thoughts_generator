@@ -31,8 +31,9 @@ def main():
     """
     logging.basicConfig(level=logging.DEBUG)
 
-    # observations = extract()
-    # cPickle.dump(observations, open('../data/pickles/posts_extract.pkl', 'w+'))
+    if lib.get_conf('new_data_pull'):
+        observations = extract()
+        cPickle.dump(observations, open(lib.get_conf('post_pickle_path'), 'w+'))
 
     observations = cPickle.load(open('../data/pickles/posts_extract.pkl'))
     observations, char_indices, indices_char, x, y = transform(observations)
