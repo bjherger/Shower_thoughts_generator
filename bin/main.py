@@ -7,23 +7,18 @@ Code Template
 """
 import logging
 import os
-
-import cPickle
 import zipfile
 
 import numpy
-import numpy as np
-import re
-
 import pandas
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.optimizers import RMSprop
 
 import lib
 import models
-from bin.clr_callback import CyclicLR
-from sentence_callback import SentenceGenerator
+from clr_callback import CyclicLR
 from reddit_scraper import scrape_subreddit
+from sentence_callback import SentenceGenerator
 
 
 def main():
@@ -102,7 +97,7 @@ def model(observation, char_indices, indices_char, x, y):
         num_epochs = 2
 
     # Set up callbacks
-    tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
+    tf_log_path = os.path.join(os.path.expanduser('~/log_dir'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
 
     mc_log_path = os.path.join(lib.get_conf('`'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')

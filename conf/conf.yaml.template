@@ -1,10 +1,12 @@
 data_schema_dir: ../data/schemas
 ngram_len: 40
 test_run: False
+new_data_pull: False
 client_secret: Y0urSecret
 client_id: Y0urID
 subreddit: Showerthoughts
 history_num_days: 400
+post_pickle_path: ../data/pickles/posts_extract.arrow
 model_checkpoint_path: ../data/output/checkpoints
 pred_length: 75
 generate_model_path: ../data/input/generate_model.h5py
