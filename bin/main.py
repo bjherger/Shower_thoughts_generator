@@ -100,7 +100,7 @@ def model(observation, char_indices, indices_char, x, y):
     tf_log_path = os.path.join(os.path.expanduser('~/log_dir'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
 
-    mc_log_path = os.path.join(lib.get_conf('`'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
+    mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
     logging.info('Using mc_log_path path: {}'.format(mc_log_path))
 
     sentence_generator = SentenceGenerator(verbose=1)
