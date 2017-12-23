@@ -4,7 +4,7 @@ test_run: False
 client_secret: Y0urSecret
 client_id: Y0urID
 subreddit: Showerthoughts
-history_num_days: 100
+history_num_days: 400
 model_checkpoint_path: ../data/output/checkpoints
 pred_length: 75
 generate_model_path: ../data/input/generate_model.h5py
