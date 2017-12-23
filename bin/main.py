@@ -9,10 +9,13 @@ import logging
 import os
 
 import cPickle
+import zipfile
+
 import numpy
 import numpy as np
 import re
 
+import pandas
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.optimizers import RMSprop
 
@@ -33,9 +36,14 @@ def main():
 
     if lib.get_conf('new_data_pull'):
         observations = extract()
-        cPickle.dump(observations, open(lib.get_conf('post_pickle_path'), 'w+'))
+        observations.to_feather(lib.get_conf('post_pickle_path'))
 
-    observations = cPickle.load(open('../data/pickles/posts_extract.pkl'))
+    if not os.path.exists(lib.get_conf('post_pickle_path')):
+        zip_ref = zipfile.ZipFile(lib.get_conf('post_pickle_path')+'.zip', 'r')
+        zip_ref.extractall(os.path.dirname(lib.get_conf('post_pickle_path')))
+        zip_ref.close()
+
+    observations = pandas.read_feather(lib.get_conf('post_pickle_path'))
     observations, char_indices, indices_char, x, y = transform(observations)
     model(observations, char_indices, indices_char, x, y)
 
@@ -97,7 +105,7 @@ def model(observation, char_indices, indices_char, x, y):
     tf_log_path = os.path.join(os.path.expanduser('~/.logs'), lib.get_batch_name())
     logging.info('Using Tensorboard path: {}'.format(tf_log_path))
 
-    mc_log_path = os.path.join(lib.get_conf('model_checkpoint_path'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
+    mc_log_path = os.path.join(lib.get_conf('`'), lib.get_batch_name() + '_epoch_{epoch:03d}_loss_{loss:.2f}.h5py')
     logging.info('Using mc_log_path path: {}'.format(mc_log_path))
 
     sentence_generator = SentenceGenerator(verbose=1)
