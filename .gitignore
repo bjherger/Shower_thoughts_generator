@@ -15,5 +15,12 @@ conf/conf.yaml
 # Model checkpoint
 data/output/checkpoints
 
+
+# Microsoft office files
+~$*.xls*
+
 # Large files
 data/pickles/posts_extract.arrow
+
+# Intermediate files
+data/output/viz/intermediate

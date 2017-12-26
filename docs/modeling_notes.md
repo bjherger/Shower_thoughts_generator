@@ -70,3 +70,18 @@ LR restarts
 Data
 
  - Downloading a 400 day data sample
+ 
+## 2017-12-26
+
+### GIF
+
+Looking up methods for creating gifs
+
+ - This [so](https://stackoverflow.com/questions/753190/programmatically-generate-video-or-animated-gif-in-python) points to imageio
+
+Single images
+
+ - [ImageFont](http://effbot.org/imagingbook/imagefont.htm), part of Pillow
+ - No great options for changing font on same line. Using same font and Pillow instead
+ 
+
