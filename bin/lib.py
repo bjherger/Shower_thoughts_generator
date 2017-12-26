@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import string
 import tempfile
 
 import numpy
@@ -140,7 +141,7 @@ def archive_dataset_schemas(step_name, local_dict, global_dict):
     agg_schema_df.to_csv(schema_output_path, index_label='variable')
 
 def legal_characters():
-    return set("""1234567890,.abcdefghijklmnopqrstuvwxyz ;?!-""")
+    return set(string.printable + '<>')
 
 def model_predict(encoder, ohe, model, text):
 
@@ -204,13 +205,23 @@ def gen_x_y(text, false_y):
     next_chars = list()
     step = 3
 
-    if false_y:
-        text +=' '
+    # Add start and end characters
+    text = re.sub('<', ' ', text)
+    text = re.sub('>', ' ', text)
+    text = '<' + text + '>>>>>>>>>>>>'
 
     text = map(lambda x: x.lower(), text)
     text = map(lambda x: x if x in legal_characters() else ' ', text)
     text = ''.join(text)
-    if not false_y:
+
+    if false_y:
+
+        # Add a padding character, so which will become the Y
+        text +=' '
+
+    else:
+
+        # Replace multiple whitespaces with a single whitespace
         text = re.sub(r'\s+', ' ', text)
 
 

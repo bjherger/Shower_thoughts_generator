@@ -27,6 +27,7 @@ dependencies:
   - certifi==2017.11.5
   - chardet==3.0.4
   - enum34==1.1.6
+  - feather-format==0.4.0
   - funcsigs==1.0.2
   - futures==3.2.0
   - h5py==2.7.1
@@ -41,6 +42,7 @@ dependencies:
   - praw==5.3.0
   - prawcore==0.13.0
   - protobuf==3.5.0.post1
+  - pyarrow==0.8.0
   - python-dateutil==2.6.1
   - pytz==2017.3
   - pyyaml==3.12

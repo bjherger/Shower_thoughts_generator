@@ -48,7 +48,6 @@ def ff_model(X, y):
 
 
 def rnn_embedding_model(X, y):
-    print X.shape
 
     if len(X.shape) >= 2:
         embedding_input_length = int(X.shape[1])
@@ -56,7 +55,7 @@ def rnn_embedding_model(X, y):
         embedding_input_length = 1
 
     # Embedding input dimensionality is the same as the number of classes in the input data set
-    embedding_input_dim = int(numpy.max(X)) + 1
+    embedding_input_dim = len(lib.legal_characters())
 
     # Embedding output dimensionality is determined by heuristic
     embedding_output_dim = int(min((embedding_input_dim + 1) / 2, 50))
@@ -81,7 +80,7 @@ def rnn_embedding_model(X, y):
 
     # Create model architecture
     x = embedding_layer(sequence_input)
-    x = LSTM(128, dropout=.2, recurrent_dropout=.2)(x)
+    x = LSTM(256, dropout=.2, recurrent_dropout=.2)(x)
     x = output_layer(x)
 
     optimizer = RMSprop(lr=.001)
@@ -89,6 +88,7 @@ def rnn_embedding_model(X, y):
     char_model.compile(optimizer=optimizer, loss='categorical_crossentropy')
 
     return char_model
+
 
 def rnn_model(X, y):
     chars = sorted(list(set(lib.legal_characters())))
