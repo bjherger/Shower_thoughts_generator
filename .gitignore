@@ -22,3 +22,5 @@ data/output/checkpoints
 # Large files
 data/pickles/posts_extract.arrow
 
+# Intermediate files
+data/output/viz/intermediate
