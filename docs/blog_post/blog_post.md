@@ -2,7 +2,11 @@
 **Teaching AI to have shower thoughts, with on Reddit's r/Showerthoughts**
 
 **tl;dr:** I tried to train a Deep Learning character model to have shower thoughts, using Reddit data. Instead it 
-learned curse words and clickbait-ing.   
+learned curse words and clickbait-ing. 
+
+![references/smart_phones.gif](references/smart_phones.gif)
+
+**Given the seed `smart phones are today s version of the`, the algorithm completed the phrase with `friend to the millions`. 
 
 ## Background
 
@@ -16,7 +20,9 @@ more about building character level deep learning models. Generally, character l
 characters, and try to infer the next character. Similar to repeatedly pressing auto-correct's top choice, this process 
 can be repeated to generate a string of AI generated characters. 
 
-TODO Image of generated sequence
+![references/jiggling.gif](references/jiggling.gif)
+
+**Output from an early epoch. The model has not yet learned words** 
 
 Utilizing training data from [r/Showerthoughts](https://www.reddit.com/r/Showerthoughts/), and [starter code](https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py)
 from Keras, I built and trained a deep learning model that learned to generate new (and sometimes profound) shower 
@@ -86,12 +92,26 @@ char_model = Model(sequence_input, x)
 char_model.compile(optimizer=optimizer, loss='categorical_crossentropy')
 ```
 
+## Results
+
+![references/dogs.gif](references/dogs.gif)
+
+**Given the seed `dogs are really just people that should`, the algorithm completed the phrase with `live to kill`.
+
+
+![references/scams.gif](references/scams.gif)
+
+**Given the seed `one of the biggest scams is believing`, the algorithm completed the phrase with `to suffer`.**
+
+one of the biggest scams is believing to suffer
+
 Unfortunately, this character level model performed quite poorly. This is perhaps due to the variety in post content 
 and writing styles, or the compounding effect of using predicted characters to infer additional characters. In the 
 future, it would be interesting to look at predicting multiple characters at a time, or building a model that predicts 
 words rather than characters.  
 
-## Results
+
+
 
 While this model struggled with the ephiphanies and profoundness of `r/Showerthoughts`, it was able to learn basic 
 spelling, a complex (and unsurprisingly foul) vocabulary, and even basic grammar rules. Though the standard Nietzsche 

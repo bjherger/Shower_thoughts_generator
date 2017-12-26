@@ -23,7 +23,7 @@ def main():
     :rtype: None
     """
     # Reference Variables
-    posts = [[ 'jiggling around cheap iphone chargers', 'jiggling around cheap iphone chargers t&r\'c6fqv<o\:`q~qwk6L+&M	jz^pRs&#@(GFB6X["\)4a\';ws,	K#udr7L^3,?ruEK'],
+    posts = [['jiggling around cheap iphone chargers', 'jiggling around cheap iphone chargers t&r\'c6fqv<o\:`q~qwk6L+&M	jz^pRs&#@(GFB6X["\)4a\';ws,	K#udr7L^3,?ruEK'],
              ['one of the biggest scams is believing', 'one of the biggest scams is believing to suffer'],
              ['dogs are really just people that should', 'dogs are really just people that should live to kill'],
              ['smart phones are today s version of the',
