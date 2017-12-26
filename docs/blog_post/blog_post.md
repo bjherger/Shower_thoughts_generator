@@ -1,14 +1,14 @@
 # Deep (Shower) Thought
-**Teaching AI to have shower thoughts, with on Reddit's r/Showerthoughts**
+**Teaching AI to have shower thoughts, trained with Reddit's r/Showerthoughts**
 
 **tl;dr:** I tried to train a Deep Learning character model to have shower thoughts, using Reddit data. Instead it 
-learned curse words and clickbait-ing. 
+learned pithiness, curse words and clickbait-ing.  
+
+## Background
 
 ![references/smart_phones.gif](references/smart_phones.gif)
 
-**Given the seed `smart phones are today s version of the`, the algorithm completed the phrase with `friend to the millions`. 
-
-## Background
+*Given the seed `smart phones are today s version of the`, the algorithm completed the phrase with `friend to the millions`.*
 
 Deep learning has drastically changed the way machines interact with human languages. From 
 [machine translation](https://research.google.com/pubs/pub45610.html) to 
@@ -20,9 +20,6 @@ more about building character level deep learning models. Generally, character l
 characters, and try to infer the next character. Similar to repeatedly pressing auto-correct's top choice, this process 
 can be repeated to generate a string of AI generated characters. 
 
-![references/jiggling.gif](references/jiggling.gif)
-
-**Output from an early epoch. The model has not yet learned words** 
 
 Utilizing training data from [r/Showerthoughts](https://www.reddit.com/r/Showerthoughts/), and [starter code](https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py)
 from Keras, I built and trained a deep learning model that learned to generate new (and sometimes profound) shower 
@@ -92,26 +89,29 @@ char_model = Model(sequence_input, x)
 char_model.compile(optimizer=optimizer, loss='categorical_crossentropy')
 ```
 
+Training the model went surprisingly smoothly. With a few hundred thousand scraped posts and a few hours on an 
+[AWS p2](https://aws.amazon.com/ec2/instance-types/p2/) GPU instance, the model got from nonsense to semi-logical posts
+
+
+![references/jiggling.gif](references/jiggling.gif)
+
+*Model output from a test run with a (very) small data set.*
+
 ## Results
 
 ![references/dogs.gif](references/dogs.gif)
 
-**Given the seed `dogs are really just people that should`, the algorithm completed the phrase with `live to kill`.
+*Given the seed `dogs are really just people that should`, the algorithm completed the phrase with `live to kill`.*
 
 
 ![references/scams.gif](references/scams.gif)
 
-**Given the seed `one of the biggest scams is believing`, the algorithm completed the phrase with `to suffer`.**
+*Given the seed `one of the biggest scams is believing`, the algorithm completed the phrase with `to suffer`.*
 
-one of the biggest scams is believing to suffer
-
-Unfortunately, this character level model performed quite poorly. This is perhaps due to the variety in post content 
+Unfortunately, this character level model struggled to create coherent thoughts. This is perhaps due to the variety in post content 
 and writing styles, or the compounding effect of using predicted characters to infer additional characters. In the 
 future, it would be interesting to look at predicting multiple characters at a time, or building a model that predicts 
 words rather than characters.  
-
-
-
 
 While this model struggled with the ephiphanies and profoundness of `r/Showerthoughts`, it was able to learn basic 
 spelling, a complex (and unsurprisingly foul) vocabulary, and even basic grammar rules. Though the standard Nietzsche 
