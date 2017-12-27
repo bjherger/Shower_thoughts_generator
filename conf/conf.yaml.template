@@ -1,6 +1,6 @@
 data_schema_dir: ../data/schemas
 ngram_len: 40
-test_run: False
+test_run: True
 new_data_pull: False
 client_secret: Y0urSecret
 client_id: Y0urID
@@ -13,3 +13,5 @@ generate_model_path: ../data/input/generate_model.h5py
 post_seed_path: ../data/input/post_seeds.csv
 generated_observations_path: ../data/output/generated/observations.csv
 generated_posts_path: ../data/output/generated/generated_posts.csv
+viz_intermediate_path: ../data/output/viz/intermediate
+viz_gif_path: ../data/output/viz

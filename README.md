@@ -1,11 +1,38 @@
-# Python Starter Repo
+# Shower Thought Generator
 
-Project Description
+**tl;dr:** I tried to train a Deep Learning character model to have shower thoughts, using Reddit data. Instead it 
+learned pithiness, curse words and clickbait-ing.
+
+A character level RNN / LSTM model, trained on data pulled from Reddit.    
+
+## Quick start
+  
+To run the Python code, complete the following:
+```bash
+
+# Create python virtual environment. Assumes that Anaconds is installed. If not, see Python Enivronment section of 
+# README
+conda env create -f environment.yml 
+
+# Activate python virtual environment
+source activate shower
+
+# Run script
+cd bin/
+python main.py
+
+# Warning: This will train a model with a large existing data pull. Depending on your setup, this could take hours to 
+# months.   
+```
 
 ## Getting started
 
 ### Repo structure
-Where important things are. 
+
+ - `bin/main.py`: Entry point into the Reddit scraper / model training code
+ - `conf/conf.yaml.template`: Template for run configs. See [confs](#confs)
+ - `bin/generator.py`: Entry point into code that will generate blog posts, given user seeds
+ - `bin/post_viz.py`: Entry point into code that will generate gifs from model output. 
 
 ### Python Environment
 Python code in this repo utilizes packages that are not part of the common library. To make sure you have all of the 
@@ -13,22 +40,19 @@ appropriate packages, please install [Anaconda](https://www.continuum.io/downloa
 described in environment.yml (Instructions [here](http://conda.pydata.org/docs/using/envs.html), under *Use 
 environment from file*, and *Change environments (activate/deactivate)*). 
 
-### To run code
-  
-To run the Python code, complete the following:
+
+### Confs
+
+This application requires some configuration before it can run correctly. Please use the commands below to set up the 
+configs:
+
 ```bash
-# Install anaconda environment
-conda env create -f environment.yml 
-# Make a note of the environent name (e.g. source activate environment_name)
+# Create configuration file
+cp conf/confs.yaml.template conf/confs.yaml
 
-# Activate environment
-source activate environment_name
-
-# Run script
-cd bin/
-python main.py
+# Fill out confs (This requires work on your end!)
+open conf/confs.yaml
 ```
-
 
 ## Contact
 Feel free to contact me at 13herger `<at>` gmail `<dot>` com
